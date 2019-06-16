@@ -1,37 +1,37 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-          Nuxt Nightworks Sample Starter
-      </h1>
-      <h2 class="subtitle">
-        template for creating nuxt apps
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >GitHub</a>
-      </div>
+    <div class="container">
+        <div v-for="user in users">{{ user.name}}</div>
     </div>
-  </div>
 </template>
 
-<script>
-import Logo from '~/components/Logo.vue'
+<script type="text/javascript" charset="utf-8">
+    export default {
+        mounted() {
+            fetch('/db.sqlite').then(response => response.arrayBuffer()
+                .then(file => this.createDb(file) )
+            )
+        },
+        data() {
+            return {
+                users: [],
+                xusers: [
+                    {id: 3, name: 'Lily', email: 'lily@lilyl,com', status: 'active'},
+                    {id: 4, name: 'bubbles', email: 'bubbles@lilyl,com', status: 'active'}
+                ],
+            }
+        },
+        methods: {
+            createDb(sqliteFile) {
+                let vm = this
+                initSqlJs().then(function (SQL) {
+                    let Uints = new Uint8Array(sqliteFile)
+                    let db = new SQL.Database(Uints)
+                    db.each('SELECT * FROM users', row => vm.users.push(row))
+                })
+            }
 
-export default {
-  components: {
-    Logo
-  }
-}
+        }
+    }
 </script>
 
 <style>
@@ -39,30 +39,9 @@ export default {
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   text-align: center;
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div>
     <nuxt />
+    <script charset="utf-8" src="sql-wasm-debug.js"></script>
   </div>
 </template>
 
